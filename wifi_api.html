@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Title of the document</title>
+
+<script src="/static/js/jquery-1.11.1.min.js"></script>
+<script src="/static/js/foundation.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/static/css/normalize.css">
+<link rel="stylesheet" type="text/css" href="/static/css/foundation.min.css">
+
+<style type="text/css">
+	#primary {
+		margin-top: 30px;
+	}
+
+	p {
+		font-size: 80%;
+	}
+
+	img {
+		margin-top: 10px;
+	}
+
+	
+	.row.number_ap {
+		margin-top: 50px;
+	}
+
+	tr:hover {
+		background-color: #F4F4F4;
+	}
+
+	body {
+		background: rgb(232, 232, 232);
+	}
+	
+</style>
+
+</head>
+<body>
+
+	<nav class="top-bar" data-topbar role="navigation">
+	  <ul class="title-area">
+	    <li class="name">
+	      <h1><a href="/">Wifi List</a></h1>
+	    </li>
+	     <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+	    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+	  </ul>
+
+	  <section class="top-bar-section">
+  		<ul class="right">
+	      <li><a href="/" class="text-right fi-list">api</a></li>
+	    </ul>
+
+	    <ul class="right">
+      		<li><a href="/wifi/realtime" class="text-right fi-list">realtime</a></li>
+    	</ul>
+
+    	<ul class="right">
+      		<li><a href="/wifi/map" class="text-right fi-list">map</a></li>
+    	</ul>
+  	  </section>
+	</nav>
+
+	<div class="row number_ap">
+		<div class="panel">
+			<h3 id="Number"></h3>
+		</div>
+	</div>
+	
+		<div class="12-large columns">
+			<table>
+			  <thead>
+			    <tr>
+			      <th class="show-for-large-only" width="200">address</th>
+			      <th class="show-for-large-only" width="200">channel</th>
+			      <th class="show-for-large-only" width="200">encryption_wep</th>
+			      <th class="show-for-large-only" width="200">encryption_wpa</th>
+			      <th class="show-for-large-only" width="200">encryption_wpa2</th>
+			      <th class="show-for-large-only" width="200">Master</th>
+			      <th class="show-for-large-only" width="200">quality</th>
+			      <th width="200">ssid</th>
+			      <th class="show-for-large" width="200">strength</th>
+			      <th width="200">map</th>
+			      <th class="show-for-large-only" width="200">Delete</th>			      		      			      		      
+			    </tr>
+			  </thead>
+			  <tbody id="tbody">
+			   
+			  </tbody>
+			</table>
+		</div>
+</body>
+
+<script>
+  	$(document).foundation();
+  	var url = '/api/json';
+  	var number = 0;
+  	$.ajax({
+    	type: "GET",
+        url: url,
+        success: function(Item, textStatus){
+        	console.dir(Item);
+	  	
+	  		if(Item.status==="OK"){
+	  			Item.msg.forEach(function(msg_obj){
+	  				++number;
+	  				var d =  '<tr>'+
+				      '<td class="show-for-large-only"><b>'+msg_obj.address+'</b></td>'+
+				      '<td class="show-for-large-only">'+msg_obj.channel+'</td>'+
+				      '<td class="show-for-large-only">'+msg_obj.encryption_wep+'</td>'+
+				      '<td class="show-for-large-only">'+msg_obj.encryption_wpa+'</td>'+
+				      '<td class="show-for-large-only">'+msg_obj.encryption_wpa2+'</td>'+
+				      '<td class="show-for-large-only">'+msg_obj.mode+'</td>'+
+				      '<td class="show-for-large-only"><b>'+msg_obj.quality+'/70</b></td>'+
+				      '<td><b>'+msg_obj.ssid+'</b></td>'+
+				      '<td class="show-for-large-only"><b>'+msg_obj.strength+' dbm</b></td>'+
+				      '<td><a href="/wifi/map/'+msg_obj.address+'" class="tiny button radius primary"> Map </a></td>'+
+				      '<td><a class="tiny button radius secondary show-for-large-only" href="/wifi/map/delete/'+msg_obj.address+'"> Delete </a></td>'+		
+				    '</tr>';
+					$('#tbody').append(d);
+	  			});
+	  			$("#Number").html("There is <bold>"+number+"</bold> Access Point");
+	  		}
+	  		
+		}
+    });
+
+</script>
+
+</html>
